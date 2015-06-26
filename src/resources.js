@@ -4,14 +4,18 @@
 
 
 var res = {
-	// 背景图片
+	
 	bg: getImgByPhone('bg'),
 	bg_fuzzy: getImgByPhone('bg_fuzzy'),
 	explain: 'res/img/explain.png',
 	playexplain: 'res/img/playexplain.png',
 	go: 'res/img/go.png',
 	number: 'res/img/number.png',
-	ready: 'res/img/ready.png'
+	ready: 'res/img/ready.png',
+	time: 'res/img/time.png',
+	button: 'res/img/button.png',
+	effect: getImgByPhone('effect')
+//	effect: 'res/img/effect1.png'
 };
 
 var G_StartRes = [
@@ -21,7 +25,10 @@ var G_StartRes = [
 	res.playexplain,
 	res.go,
 	res.number,
-	res.ready
+	res.ready,
+	res.time,
+	res.button,
+	res.effect
 ];
 
 function getImgByPhone(key){
