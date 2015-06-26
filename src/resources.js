@@ -4,7 +4,6 @@
 
 
 var res = {
-	
 	bg: getImgByPhone('bg'),
 	bg_fuzzy: getImgByPhone('bg_fuzzy'),
 	explain: 'res/img/explain.png',
@@ -14,8 +13,14 @@ var res = {
 	ready: 'res/img/ready.png',
 	time: 'res/img/time.png',
 	button: 'res/img/button.png',
-	effect: getImgByPhone('effect')
-//	effect: 'res/img/effect1.png'
+	effect: getImgByPhone('effect'),
+	milk: 'res/img/milk.png',
+	tip: 'res/img/tip.png',
+	wechaticon: 'res/img/wechaticon.png',
+	result_text: 'res/img/result_text.png',
+	resultbg: 'res/img/resultbg.png',
+	result_scorebg: 'res/img/result_scorebg.png',
+	share: getImgByPhone('share')
 };
 
 var G_StartRes = [
@@ -28,7 +33,14 @@ var G_StartRes = [
 	res.ready,
 	res.time,
 	res.button,
-	res.effect
+	res.effect,
+	res.milk,
+	res.tip,
+	res.wechaticon,
+	res.result_text,
+	res.resultbg,
+	res.result_scorebg,
+	res.share
 ];
 
 function getImgByPhone(key){

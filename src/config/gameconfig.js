@@ -9,6 +9,13 @@ var GC = {
 	time_showPlayexplain: 1500,	// 显示手指提示
 	time_showGo: 3000,			// 显示go按钮
 	time_showReady: 1000,		// 显示ready
+	Incremental: 100,			// 每次增加分数
+	level: {					// 评判结果分数(大力水手，神马神马的)
+		l1: 3000,
+		l2: 6000,
+		l3: 9000,
+		l4: 10000
+	},
 	rules: [
 		// 第一波		2个/S 共5S
 		{

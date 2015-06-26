@@ -1,5 +1,5 @@
 var MainScene = cc.Layer.extend({
-	
+	currentScore: 0,
     onEnter:function () {
         this._super();
         this.init();
@@ -45,10 +45,88 @@ var MainScene = cc.Layer.extend({
         Utils.delayExec(self.showReady.bind(self), GC.time_showReady);
         // 显示数字
         Utils.delayExec(self.showNumber.bind(self), GC.time_showReady + 1000);
+        
+        
+        self.milk_rects = milk_rects = [
+   			cc.rect(0, 0, 156, 199),
+   			cc.rect(162, 0, 156, 199),
+   			cc.rect(320, 0, 156, 199),
+   			cc.rect(477, 0, 149, 199)
+   		];
+   		self.milk_posi = milk_posi = [450, 570, 690, 810];
+   		self.milk_posiTo = milk_posiTo = [0, 360, 800, 1200]
+		
         return true;
     },
+    checkIsOver: function(){
+    	var self = this,
+    		milkContainer = self.milkContainer;
+    		
+    	var allMilk = milkContainer.getChildren();
+    	cc.log(allMilk.length)
+    	for (var i = 0, len = allMilk.length, item; i <len; i++) {
+    		item = allMilk[i];
+			if(item.y <= 0){
+				self.gameOver();
+				break;
+			}
+    	}
+    },
     startGame: function(){
-//	  	alert('start')
+		var self = this;
+		
+		var milkContainer = self.milkContainer = new cc.Layer();
+        milkContainer.setPosition(cc.visibleRect.bottomLeft);
+        self.addChild(milkContainer);
+		var checkInterval = self.checkInterval = setInterval(self.checkIsOver.bind(this), 500);
+		
+		// 渲染奶粉
+		self.moveMilk(GC.rules, 0);
+    },
+    gameOver: function(){
+    	cc.log('game over')
+    	var self = this;
+    	clearTimeout(self.timer);
+    	clearInterval(self.interval);
+    	clearInterval(self.interval_countdown);
+    	clearInterval(self.checkInterval);
+    	
+    	cc.eventManager.removeListeners(self.buttons['button0']);
+    	cc.eventManager.removeListeners(self.buttons['button1']);
+    	cc.eventManager.removeListeners(self.buttons['button2']);
+    	cc.eventManager.removeListeners(self.buttons['button3']);
+    	
+    	// 弹出结果显示
+    	Utils.delayExec(self.popupResult.bind(self), 1000);
+    },
+    count: 0,
+    moveMilk: function(rules, index){
+    	var self = this;
+    	
+    	if(index >= rules.length){
+    		cc.log(self.count);
+    		return;
+    	}
+    	
+    	var rule = rules[index];
+    	var timer = self.timer = setTimeout(function(){
+    		
+    		var num = 0;
+    		var interval = self.interval = setInterval(function(){
+    			
+    			self.renderMilk();
+    			self.count++;
+    			num++
+    			
+    			if(num >= rule.count){
+    				clearInterval(interval);
+    				interval = null;
+    				self.moveMilk(rules, ++index);
+    				cc.log(self.count + ' - ' + JSON.stringify(rule))
+    			}
+    		}, (1000 / rule.speed));
+    		
+    	}, ( temp = rules[index-1] && temp && temp.count) || 0)
     },
     showReady: function(){
     	Utils.show(this.ready);
@@ -74,7 +152,8 @@ var MainScene = cc.Layer.extend({
     		// 渲染按钮
         	self.buttons = self.renderButton(self.bg, self.container);
         	// 开始游戏
-    		Utils.delayExec(self.startGame.bind(self), 1000);
+        	var rules = GC.rules;
+    		Utils.delayExec(self.startGame.bind(self), 1000 - (1000 / rules[0].speed + 1000 / rules[rules.length - 1].speed));
     		// 开始倒计时
     		Utils.delayExec(self.startCountDown.bind(self), 1000);
     	}, 3000);
@@ -148,22 +227,21 @@ var MainScene = cc.Layer.extend({
         });
         container.addChild(time, 0, 'time');
 		
-		
     },
     renderButton: function(bg, container){
     	var self = this;
     	
     	var rects = [
-    		cc.rect(0, 0, 330, 95),
-    		cc.rect(352, 0, 330, 95),
-    		cc.rect(705, 0, 330, 95),
-    		cc.rect(1059, 0, 330, 95)
+    		cc.rect(0, 0, 330, 150),
+    		cc.rect(352, 0, 330, 150),
+    		cc.rect(705, 0, 330, 150),
+    		cc.rect(1059, 0, 330, 150)
     	];
     	var rects_activate = [
-    		cc.rect(0, 150, 330, 95),
-    		cc.rect(352, 150, 330, 95),
-    		cc.rect(705, 150, 330, 95),
-    		cc.rect(1059, 150, 330, 95)
+    		cc.rect(0, 150, 330, 150),
+    		cc.rect(352, 150, 330, 150),
+    		cc.rect(705, 150, 330, 150),
+    		cc.rect(1059, 150, 330, 150)
     	];
     	var effect_rects = [
     		cc.rect(0, 0, 481, 596),
@@ -183,7 +261,7 @@ var MainScene = cc.Layer.extend({
 	        	anchorX: 0,
 	        	anchorY: 0,
 	        	x: posi[i],
-	        	y: 70
+	        	y: 15
 	        });
 	        container.addChild(button_normal, 0, 'button' + i);
 			buttons['button' + i] = button_normal;
@@ -205,7 +283,7 @@ var MainScene = cc.Layer.extend({
 	        	anchorX: 0,
 	        	anchorY: 0,
 	        	x: effect_posi[i],
-	        	y: button_normal.y + 20
+	        	y: button_normal.y + 75
 	        });
 	        effect.setVisible(false);
 	        container.addChild(effect, 5, 'button' + i + 'effect');   
@@ -228,9 +306,9 @@ var MainScene = cc.Layer.extend({
                 }
 	            return false;
             },
-            onTouchMoved: function(touch, event){
-            	touchend(event.getCurrentTarget());
-            },
+//          onTouchMoved: function(touch, event){
+//          	touchend(event.getCurrentTarget());
+//          },
             onTouchEnded: function(touch, event){
             	var target = event.getCurrentTarget();
                 var locationInNode = target.convertToNodeSpace(touch.getLocation());
@@ -253,7 +331,7 @@ var MainScene = cc.Layer.extend({
     	score = Math.min(99999, score);
     	var numberRects = [
     		cc.rect(294, 0, 28, 35),	// 0
-    		cc.rect(-6, 0, 28, 35),		// 1
+    		cc.rect(0, 0, 28, 35),		// 1
     		cc.rect(28, 0, 28, 35),		// 2
     		cc.rect(62 , 0, 28, 35),	// 3
     		cc.rect(95, 0, 28, 35),		// 4
@@ -324,12 +402,13 @@ var MainScene = cc.Layer.extend({
     		time = self.time;
     	
     	var w = time.width / GC.allTime / 5;
-    	var interval = setInterval(function(){
+    	var interval_countdown = self.interval_countdown = setInterval(function(){
     		var width = time.width;
     		if(width <= 0){
-    			cc.log('time over');
-    			clearInterval(interval);
+    			clearInterval(interval_countdown);
     			interval = null;
+    			// 游戏结束
+	    		self.gameOver();
     		}
     		time.setTextureRect(cc.rect(0, 215, width - w, 41));
     	}, 200);
@@ -354,14 +433,254 @@ var MainScene = cc.Layer.extend({
     	
     	node.setVisible(false);
    },
-   btnTouchEnd: function(node){
+    btnTouchEnd: function(node){
    		var self = this,
-    		container = self.container;
+    		container = self.container,
+    		milkContainer = self.milkContainer;
 
     	for (var i = 0; i < 4; i++) {
     		container.getChildByName('button' + i + 'effect').setVisible(false);
     		container.getChildByName('button' + i + 'activate').setVisible(false);
     		container.getChildByName('button' + i).setVisible(true);
     	}
-   }
+    	if(milkContainer){
+    		// 碰撞检测
+	    	var allMilk = milkContainer.getChildren();
+	    	var inRect = false,
+	    		currentMilk = null;
+    		
+    		
+	    	for (var i = 0, len = allMilk.length, milk; i < len; i++) {
+	    		milk = allMilk[i];
+	    		inRect = self.rectIntersectsRect(milk, node);
+	    		if(inRect){
+	    			currentMilk = milk;
+	    			break;
+	    		}
+	    	}
+
+	    	if(inRect){
+	    		// 加分 删除奶粉
+	    		milkContainer.removeChild(currentMilk);
+	    		
+	    		self.currentScore += GC.Incremental;
+	    		self.setScore(self.currentScore);
+	    		self.showTip(self.currentScore);
+	    		
+	    	} else if(allMilk.length > 0){
+	    		// 游戏结束
+	    		self.gameOver();
+	    	}
+    	}
+   },
+   	renderMilk: function(){
+   		var self = this,
+   			milk_rects = self.milk_rects,
+   			milk_posi = self.milk_posi,
+   			bg = self.bg,
+    		milkContainer = self.milkContainer;
+    		
+   		var random = Math.floor(Math.random() * milk_rects.length);
+   		var milk = new cc.Sprite(res.milk, milk_rects[random]);
+        milk.attr({
+        	anchorX: 0,
+        	anchorY: 0,
+        	x: milk_posi[random],
+        	y: bg.height - milk.height / 2 - 20,
+        	scale: 0.5
+        });
+        milkContainer.addChild(milk, 7, 'milk');
+        
+        milk.runAction(cc.scaleTo(1, 1));
+        milk.runAction(cc.moveTo(1, cc.p(milk_posiTo[random], -milk.height)));
+   	},
+   	rectIntersectsRect: function(node1, node2){
+   		var box1 = node1.getBoundingBox();  
+		var bottom = cc.p(box1.x +box1.width / 2,box1.y);  
+		var right = cc.p(box1.x +box1.width,box1.y +box1.height / 2);  
+		var left = cc.p(box1.x,box1.y +box1.height / 2);  
+		var top = cc.p(box1.x + box1.width / 2,box1.y + box1.height);  
+		  
+		  
+		 var box2 = node2.getBoundingBox();  
+		 if(cc.rectContainsPoint(box2, left)||cc.rectContainsPoint(box2, right)||cc.rectContainsPoint(box2, top)||cc.rectContainsPoint(box2, bottom)){  
+		    //发生碰撞 
+		 	return true;
+		 }
+		 return false;
+   	},
+   	isInitTip: false,
+   	showTip: function(score){
+
+   		var self = this;
+   		var bg = self.bg;
+   		
+   		var rects = {
+   			'3000': cc.rect(504, 0, 435, 85),	// NOT BAD
+   			'6000': cc.rect(1007, 0, 250, 85),	// COOL
+   			'9000': cc.rect(1372, 0, 584, 85),	// WONDERFUL
+   			'10000': cc.rect(0, 0, 448, 85)	// PERFECT
+   		}
+   		
+   		var rect = rects[score];
+   		if(rect){
+   			
+   			if(!self.isInitTip){
+   				self.isInitTip = true;
+   				renderTip();
+   			}
+   			var tip = self.tip;
+   			tip.setTextureRect(rect);
+   			tip.attr({
+   				x: bg.width / 2 - tip.width / 2,
+	        	y: bg.height - bg.height / 3
+   			});
+   			Utils.show(tip);
+   			Utils.delayExec(Utils.hide.bind(self, tip), 1500);
+   		}
+   		
+   		function renderTip(){
+   			
+   			var tip = self.tip = new cc.Sprite(res.tip, rects['3000']);
+   			
+	        tip.attr({
+	        	anchorX: 0,
+	        	anchorY: 0,
+	        	x: bg.width / 2 - tip.width / 2,
+	        	y: bg.height - bg.height / 3
+	        });
+	        tip.setVisible(false);
+	        self.container.addChild(tip, 10, 'tip');
+   		}
+   	},
+   	popupResult: function(){
+   		var self = this,
+   			bg = self.bg,
+   			score = self.currentScore,
+   			level = GC.level;
+   		
+   		var resultContainer = self.resultContainer = new cc.Layer();
+        resultContainer.setPosition(cc.visibleRect.bottomLeft);
+        self.addChild(resultContainer, 10);
+   		
+   		// 背景框
+   		var resultbg = new cc.Sprite(res.resultbg);
+        resultbg.attr({
+        	anchorX: 0,
+        	anchorY: 0
+        });
+        resultContainer.setPosition(cc.p(bg.width / 2 - resultbg.width / 2, bg.height / 2- resultbg.height / 2));
+        resultContainer.addChild(resultbg, 0, 'resultbg');
+        
+        // 提示文字
+        var txt_rect;
+        if(score < level.l1){
+        	// 入门新手
+        	txt_rect = cc.rect(0, 0, 664, 301);
+        } else if(score < level.l2){
+        	// 大力水手
+        	txt_rect = cc.rect(676, 0, 662, 301);
+        } else if(score < level.l3){
+        	// 武林高手
+        	txt_rect = cc.rect(1349, 0, 663, 301);
+        } else {
+        	// 超级神“抢”手
+        	txt_rect = cc.rect(2035, 0, 662, 301);
+        }
+        var result_text = new cc.Sprite(res.result_text, txt_rect);
+        result_text.attr({
+        	anchorX: 0,
+        	anchorY: 0,
+        	x: resultbg.width / 2 - result_text.width / 2,
+        	y: resultbg.height / 2 - result_text.height / 2
+        });
+        resultContainer.addChild(result_text, 0, 'result_text');
+        
+        // 分数背景
+        var result_scorebg = new cc.Sprite(res.result_scorebg);
+        result_scorebg.attr({
+        	anchorX: 0,
+        	anchorY: 0,
+        	x: -60,
+        	y: result_text.y + result_text.height / 2
+        });
+        resultContainer.addChild(result_scorebg, 0, 'result_scorebg');
+        
+        // 渲染分数
+        var numberRects = [
+    		cc.rect(294, 0, 28, 35),	// 0
+    		cc.rect(0, 0, 28, 35),		// 1
+    		cc.rect(28, 0, 28, 35),		// 2
+    		cc.rect(62 , 0, 28, 35),	// 3
+    		cc.rect(95, 0, 28, 35),		// 4
+    		cc.rect(129, 0, 28, 35),	// 5
+    		cc.rect(163, 0, 28, 35),	// 6
+    		cc.rect(196, 0, 28, 35),	// 7
+    		cc.rect(230, 0, 28, 35),	// 8
+    		cc.rect(264, 0, 28, 35)		// 9
+    	];
+    	
+    	var left = 10;
+    	if(score < 10000){
+    		left = 30
+    	}
+    	if(score < 1000){
+    		left = 45
+    	}
+    	if(score < 100){
+    		left = 65
+    	}
+    	if(score < 10){
+    		left = 80
+    	}
+    	score += '';
+    	for (var i = 0, len = score.length, str; i < len; i++) {
+    		str = +score[i];
+    		var num = new cc.Sprite(res.number, numberRects[str]);
+	        num.attr({
+	        	anchorX: 0,
+	        	anchorY: 0,
+	        	x: i * 32 + left,
+	        	y: result_scorebg.height / 2 - num.height / 2
+	        });
+	        result_scorebg.addChild(num, 0, 'num' + i);
+    	}
+        
+        // 微信图标
+        var wechaticon = new cc.Sprite(res.wechaticon);
+        wechaticon.attr({
+        	x: resultbg.width / 2 ,
+        	y: 5 + wechaticon.height / 2
+        });
+        resultContainer.addChild(wechaticon, 0, 'wechaticon');
+        wechaticon.runAction(cc.rotateBy(1, 360, 360).repeatForever());
+        
+        // 添加事件
+        cc.eventManager.addListener({
+            event: cc.EventListener.TOUCH_ONE_BY_ONE,//单击
+            swallowTouches: true,
+            onTouchBegan: function(touch, event) {
+                var target = event.getCurrentTarget();
+                var locationInNode = target.convertToNodeSpace(touch.getLocation());
+                var s = target.getContentSize();
+                var rect = cc.rect(0, 0, s.width, s.height);
+                if (cc.rectContainsPoint(rect, locationInNode)) {
+                	self.share.setVisible(true);
+                	self.removeChild(resultContainer);
+                }
+                return true;
+            }
+        }, wechaticon);
+        
+        
+        // 分享
+        var share = self.share = new cc.Sprite(res.share);
+        share.attr({
+        	anchorX: 0,
+        	anchorY: 0
+        });
+        share.setPosition(cc.visibleRect.bottomLeft);
+        share.setVisible(false);
+        self.container.addChild(share, 20, 'share');
+   	}
 });
