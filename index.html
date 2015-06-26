@@ -22,8 +22,7 @@
 </head>
 <body>
 <canvas id="gameCanvas"></canvas>
-<!--<script src="lib/cocos2d-js-v3.2-min.js" type="text/javascript" charset="utf-8"></script>-->
-<script src="lib/cocos2d-js-v3.6-lite.js" type="text/javascript" charset="utf-8"></script>
+<script src="lib/cocos2d-js-v3.6-lite.min.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 	cc.game.onStart = function(){
 		
@@ -39,6 +38,7 @@
 		
 		cc.Loader.preload(G_StartRes, function () {
 	        cc.director.runScene(new StartMenu());
+//			cc.director.runScene(new MainScene());
 	    }, this);
 	}
 	cc.game.run();

@@ -8,6 +8,8 @@
     	"src/config/gameconfig.js",
         "src/resources.js",
         "src/loader.js",
-        "src/startMenu.js"
+        "src/utils.js",
+        "src/startMenu.js",
+        "src/mainScene.js"
     ]
 }

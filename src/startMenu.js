@@ -1,4 +1,3 @@
-
 var StartMenu = cc.Layer.extend({
 	
     onEnter:function () {
@@ -86,40 +85,40 @@ var StartMenu = cc.Layer.extend({
         go.setVisible(false);
         explainbox.addChild(go, 0, 'go');
         
+        // 添加事件
+        cc.eventManager.addListener({
+            event: cc.EventListener.TOUCH_ONE_BY_ONE,//单击
+            swallowTouches: true,
+            onTouchBegan: function(touch, event) {
+                var target = event.getCurrentTarget();
+                var locationInNode = target.convertToNodeSpace(touch.getLocation());
+                var s = target.getContentSize();
+                var rect = cc.rect(0, 0, s.width, s.height);
+                if (cc.rectContainsPoint(rect, locationInNode)) {
+                	cc.director.runScene(new MainScene());
+                }
+                return true;
+            }
+        }, go);
+        
         // 显示说明
-        self.delayExec(self.showExplain);
+        Utils.delayExec(self.showExplain.bind(self), GC.time_showExplain);
         // 手指提示
-        self.delayExec(self.showPlayexplain, 3000);
+        Utils.delayExec(self.showPlayexplain.bind(self), GC.time_showExplain + GC.time_showExplain);
         // 显示GO
-        self.delayExec(self.showGo, 6000);
+        Utils.delayExec(self.showGo.bind(self), GC.time_showExplain + GC.time_showExplain + GC.time_showGo);
         
         return true;
     },
     showExplain: function(){
-        this.show(this.bg_fuzzy);
-        this.show(this.explain);
+        Utils.show(this.bg_fuzzy);
+        Utils.show(this.explain);
     },
     showPlayexplain: function(){
-    	this.show(this.playexplain);
+    	Utils.show(this.playexplain);
     },
     showGo: function(){
-        this.show(this.go);
-        this.hide(this.playexplain);
-    },
-    delayExec: function(fn, time){
-    	setTimeout(fn.bind(this), time || 1500);
-    },
-    show: function(node, time){
-    	node.setVisible(true);
-    	var fadeto = new cc.FadeTo(time || 0.2, 255);
-        node.runAction(fadeto);
-    },
-    hide: function(node, time){
-    	var fadeto = new cc.FadeTo(time || 0.2, 0);
-        node.runAction(fadeto);
-        setTimeout(function(){
-        	node.setVisible(false);
-        }, time || 0.2);
+        Utils.show(this.go);
+        Utils.hide(this.playexplain);
     }
 });
-

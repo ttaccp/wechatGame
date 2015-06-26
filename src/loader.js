@@ -1,4 +1,3 @@
-
 cc.Loader = cc.Scene.extend({
     _label : null,
     _className:"Loader",
