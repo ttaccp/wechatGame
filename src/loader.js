@@ -59,8 +59,9 @@ cc.Loader = cc.Scene.extend({
 //              self._label.setString(percent + "%");
                 self.loading_img.setTextureRect(cc.rect(0, 0, 298 * percent / 100, 41));
             }, function () {
-                if (self.cb)
-                    self.cb();
+                if (self.cb) {
+                	setTimeout(self.cb.bind(self), 100);
+                }   
             });
     }
 });
