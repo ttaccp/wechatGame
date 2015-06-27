@@ -9,12 +9,30 @@ cc.Loader = cc.Scene.extend({
         var bgLayer = new cc.LayerColor(cc.color(0, 0, 0, 50));
         self.addChild(bgLayer, 0);
 
-        var label = self._label = new cc.LabelTTF("0%", "Arial", 40);
-        label.setPosition(cc.visibleRect.center);
-        label.setColor(cc.color(255, 255, 255));
-        bgLayer.addChild(self._label, 10);
+//      var label = self._label = new cc.LabelTTF("0%", "Arial", 40);
+//      label.setPosition(cc.visibleRect.center);
+//      label.setColor(cc.color(255, 255, 255));
+//      bgLayer.addChild(self._label, 10);
         
-        return true;
+        var loading_bg = self.loading_bg = new cc.Sprite('res/img/loading.png', cc.rect(0, 50, 298, 41));
+        loading_bg.attr({
+        	anchorX: 0,
+        	anchorY: 0,
+        	x: bgLayer.width / 2 - 298 /2,
+        	y: cc.visibleRect.center.y
+        });
+        bgLayer.addChild(loading_bg, 10, 'loading_bg');
+        
+        var loading_img = self.loading_img = new cc.Sprite('res/img/loading.png', cc.rect(0, 0, 0, 41));
+        loading_img.attr({
+        	anchorX: 0,
+        	anchorY: 0,
+        	x: loading_bg.x,
+        	y: loading_bg.y
+        });
+        bgLayer.addChild(loading_img, 10, 'loading_img');
+        
+        return false;
     },
     onEnter: function () {
     	
@@ -35,9 +53,11 @@ cc.Loader = cc.Scene.extend({
         var res = self.resources;
         cc.loader.load(res,
             function (result, count, loadedCount) {
+            	
                 var percent = (++loadedCount / count * 100) | 0;
                 percent = Math.min(percent, 100);
-                self._label.setString(percent + "%");
+//              self._label.setString(percent + "%");
+                self.loading_img.setTextureRect(cc.rect(0, 0, 298 * percent / 100, 41));
             }, function () {
                 if (self.cb)
                     self.cb();
