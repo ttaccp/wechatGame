@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>wechatGame</title>
+    <title>美赞臣</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta charset="utf-8"/>
@@ -13,35 +13,108 @@
     		overflow: hidden;
     		margin: 0;
     		padding: 0;
+    		-webkit-user-select: none;
+    		-moz-user-select: none;
     	}
     	#gameCanvas{
     		width: 0;
     		height: 0;
     	}
+    	.vertical,
+    	.cross{
+    		position: absolute;
+    		left: 0;
+    		top: 0;
+    		background: #000;
+    		width: 100%;
+    		height: 100%;
+    		z-index: 10;
+    	}
+    	.cross{
+    		display: none;
+    	}
+    	.cross .img,
+    	.vertical .img{
+    		width: 244px;
+    		display: block;
+    		position: relative;
+    		top: 50%;
+    		margin: -50% auto 0;
+    	}
+    	.cross .img{
+    		width: 137px;
+    		margin-top: -80px;
+    	}
     </style>
 </head>
 <body>
+<div class="vertical" id="vertical">
+	<img src="res/img/verticalScreen.png" class="img"/>
+</div>
+<div class="cross" id="cross">
+	<img src="res/img/crossScreen.png" class="img"/>
+</div>
+
 <canvas id="gameCanvas"></canvas>
 <script src="lib/cocos2d-js-v3.6-lite.min.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
-	cc.game.onStart = function(){
+	
+	initView();
+	
+	window.onresize = initView;
+	document.getElementById('cross').addEventListener('touchstart', function(){
+		runGame();
+		document.getElementById('cross').style.display = 'none';
+	}, true);
+	function initView(){
+		var width = document.body.clientWidth,
+			height = document.body.clientHeight;
 		
-		cc.view.adjustViewPort(true);
-		if(cc.sys.isMobile){
-			cc.view.setDesignResolutionSize(1334, 750,cc.ResolutionPolicy.FIXED_WIDTH);
-		} else {
-			cc.view.setDesignResolutionSize(1334, 750,cc.ResolutionPolicy.SHOW_ALL);
+		var vertical = document.getElementById('vertical'),
+			cross = document.getElementById('cross');
+		
+		if(width < height){// 显示竖屏
+			setDisplay(vertical, 'block');
+			setDisplay(cross, 'none');
+		} else {// 显示横屏
+			
+			if(!isRun){
+				setDisplay(cross, 'block');
+			} else {
+				setDisplay(cross, 'none');
+			}
+			setDisplay(vertical, 'none');
+			
 		}
 		
-		cc.view.resizeWithBrowserSize(true);
-		cc.director.setProjection(cc.Director.PROJECTION_2D);
-		
-		cc.Loader.preload(G_StartRes, function () {
-	        cc.director.runScene(new StartMenu());
-//			cc.director.runScene(new MainScene());
-	    }, this);
+		function setDisplay(dom, css){
+			dom.style.display = css;
+		}
 	}
-	cc.game.run();
+	
+	var isRun = false;
+	function runGame(){
+		isRun = true;
+		cc.game.onStart = function(){
+			cc.view.adjustViewPort(true);
+			if(cc.sys.isMobile){
+				cc.view.setDesignResolutionSize(1334, 750,cc.ResolutionPolicy.FIXED_WIDTH);
+			} else {
+				cc.view.setDesignResolutionSize(1334, 750,cc.ResolutionPolicy.SHOW_ALL);
+			}
+			
+			cc.view.resizeWithBrowserSize(true);
+			cc.director.setProjection(cc.Director.PROJECTION_2D);
+			
+			cc.Loader.preload(G_StartRes, function () {
+		        cc.director.runScene(new StartMenu());
+	//			cc.director.runScene(new MainScene());
+		    }, this);
+		}
+		cc.game.run();
+	}
+	
+	
 	
 </script>
 </body>

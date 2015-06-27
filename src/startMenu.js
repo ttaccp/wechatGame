@@ -55,7 +55,7 @@ var StartMenu = cc.Layer.extend({
         	anchorX: 0,
         	anchorY: 0,
         	x: size.width / 2 - explain.width / 2,
-        	y: size.height / 2 - explain.height / 2,
+        	y: size.height / 2 - explain.height / 2 + 30,
         });
         
         self.addChild(explainbox);
@@ -67,7 +67,7 @@ var StartMenu = cc.Layer.extend({
         	anchorX: 0,
         	anchorY: 0,
         	x: 40,
-        	y: -100,
+        	y: -90,
         	opacity: 0
         });
         playexplain.setVisible(false);
