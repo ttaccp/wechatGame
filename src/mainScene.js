@@ -592,7 +592,7 @@ var MainScene = cc.Layer.extend({
         	anchorX: 0,
         	anchorY: 0,
         	x: resultbg.width / 2 - result_text.width / 2,
-        	y: resultbg.height / 2 - result_text.height / 2
+        	y: resultbg.height / 2 - result_text.height / 2 + 30
         });
         resultContainer.addChild(result_text, 0, 'result_text');
         
@@ -647,31 +647,26 @@ var MainScene = cc.Layer.extend({
     	}
         
         // 微信图标
-        var wechaticon = new cc.Sprite(res.wechaticon);
+        var wechaticon = new cc.Sprite(res.wechaticon, cc.rect(127, 0, 90, 99));
         wechaticon.attr({
-        	x: resultbg.width / 2 ,
-        	y: 5 + wechaticon.height / 2
+        	x: resultbg.width / 2 + wechaticon.width / 2 + 20,
+        	y: result_text.y - 50
         });
         resultContainer.addChild(wechaticon, 0, 'wechaticon');
-        wechaticon.runAction(cc.rotateBy(1, 360, 360).repeatForever());
+//      wechaticon.runAction(cc.rotateBy(1, 360, 360).repeatForever());
         
         // 添加事件
-        cc.eventManager.addListener({
-            event: cc.EventListener.TOUCH_ONE_BY_ONE,//单击
-            swallowTouches: true,
-            onTouchBegan: function(touch, event) {
-                var target = event.getCurrentTarget();
-                var locationInNode = target.convertToNodeSpace(touch.getLocation());
-                var s = target.getContentSize();
-                var rect = cc.rect(0, 0, s.width, s.height);
-                if (cc.rectContainsPoint(rect, locationInNode)) {
-                	self.share.setVisible(true);
-                	self.removeChild(resultContainer);
-                }
-                return true;
-            }
-        }, wechaticon);
-        
+        var listener = createListener();
+        cc.eventManager.addListener(listener.clone(), wechaticon);
+//      
+        // 再来一次
+        var restart = new cc.Sprite(res.wechaticon, cc.rect(0, 0, 90, 99));
+        restart.attr({
+        	x: wechaticon.x - restart.width - 30,
+        	y: wechaticon.y
+        });
+        resultContainer.addChild(restart, 0, 'restart');
+        cc.eventManager.addListener(listener.clone(), restart);
         
         // 分享
         var share = self.share = new cc.Sprite(res.share);
@@ -682,5 +677,35 @@ var MainScene = cc.Layer.extend({
         share.setPosition(cc.visibleRect.bottomLeft);
         share.setVisible(false);
         self.container.addChild(share, 20, 'share');
+        cc.eventManager.addListener(listener.clone(), share);
+        
+        function createListener(){
+        	return cc.EventListener.create({
+	            event: cc.EventListener.TOUCH_ONE_BY_ONE,//单击
+	            swallowTouches: true,
+	            onTouchBegan: function(touch, event) {
+	
+	                var target = event.getCurrentTarget();
+	                var locationInNode = target.convertToNodeSpace(touch.getLocation());
+	                var s = target.getContentSize();
+	                var rect = cc.rect(0, 0, s.width, s.height);
+	                if (cc.rectContainsPoint(rect, locationInNode)) {
+	                	var name = target.getName();
+	                	if(name == 'wechaticon'){
+	                		self.share.setVisible(true);
+	                		resultContainer.setVisible(false);
+//              			self.removeChild(resultContainer);
+	                	} else if(name == 'restart'){
+	                		cc.director.runScene(new MainScene());
+	                	} else if(name == 'share'){
+	                		self.share.setVisible(false);
+	                		resultContainer.setVisible(true);
+	                	}
+	                	return true;
+	                }
+		            return false;
+	            }
+	        });
+        }
    	}
 });
