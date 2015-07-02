@@ -69,7 +69,7 @@
 	initView();
 	
 	window.onresize = initView;
-	document.getElementById('cross').addEventListener('touchstart', function(){
+	document.getElementById('cross').addEventListener(cc.sys.isMobile ? 'touchstart' : 'click', function(){
 		runGame();
 		document.getElementById('cross').style.display = 'none';
 	}, true);
