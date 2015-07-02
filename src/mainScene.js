@@ -56,6 +56,8 @@ var MainScene = cc.Layer.extend({
    		self.milk_posi = milk_posi = [450, 570, 690, 810];
    		self.milk_posiTo = milk_posiTo = [0, 360, 800, 1200]
 		
+		Utils.bgEffect();
+		
         return true;
     },
     checkIsOver: function(){
@@ -79,7 +81,6 @@ var MainScene = cc.Layer.extend({
         milkContainer.setPosition(cc.visibleRect.bottomLeft);
         self.addChild(milkContainer);
 //		var checkInterval = self.checkInterval = setInterval(self.checkIsOver.bind(this), 500);
-		Utils.bgEffect();
 		// 渲染奶粉
 		self.moveMilk(GC.rules, 0);
     },
@@ -519,12 +520,11 @@ var MainScene = cc.Layer.extend({
    		var self = this;
    		var bg = self.bg;
    		
-   		var rects = {
-   			'3000': cc.rect(504, 0, 435, 85),	// NOT BAD
-   			'6000': cc.rect(1007, 0, 250, 85),	// COOL
-   			'9000': cc.rect(1372, 0, 584, 85),	// WONDERFUL
-   			'10000': cc.rect(0, 0, 448, 85)	// PERFECT
-   		}
+   		var rects = {};
+   		rects[GC.level.l1] = cc.rect(504, 0, 435, 85);	// NOT BAD
+   		rects[GC.level.l2] = cc.rect(1007, 0, 250, 85);	// COOL
+   		rects[GC.level.l3] = cc.rect(1372, 0, 584, 85);	// WONDERFUL
+   		rects[GC.level.l4] = cc.rect(0, 0, 448, 85);	// PERFECT
    		
    		var rect = rects[score];
    		if(rect){
