@@ -60,6 +60,8 @@ cc.Loader = cc.Scene.extend({
                 self.loading_img.setTextureRect(cc.rect(0, 0, 298 * percent / 100, 41));
             }, function () {
                 if (self.cb) {
+                	cc.audioEngine.setMusicVolume(0.1);
+                	cc.audioEngine.playEffect(G_res.loadend);
                 	setTimeout(self.cb.bind(self), 100);
                 }   
             });

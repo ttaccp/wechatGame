@@ -16,7 +16,7 @@ var StartMenu = cc.Layer.extend({
         self.addChild(container);
 
         // 背景图
-        var bg = self.bg = new cc.Sprite(res.bg);
+        var bg = self.bg = new cc.Sprite(G_res.bg);
         bg.attr({
         	anchorX: 0,
         	anchorY: 0,
@@ -26,7 +26,7 @@ var StartMenu = cc.Layer.extend({
         container.addChild(bg, 0, 'bg');
         
         // 模糊背景图
-        var bg_fuzzy = self.bg_fuzzy = new cc.Sprite(res.bg_fuzzy);
+        var bg_fuzzy = self.bg_fuzzy = new cc.Sprite(G_res.bg_fuzzy);
         bg_fuzzy.attr({
         	anchorX: 0,
         	anchorY: 0,
@@ -39,7 +39,7 @@ var StartMenu = cc.Layer.extend({
         
         
         // 说明图片
-        var explain = self.explain = new cc.Sprite(res.explain);
+        var explain = self.explain = new cc.Sprite(G_res.explain);
         explain.attr({
         	anchorX: 0,
         	anchorY: 0,
@@ -62,7 +62,7 @@ var StartMenu = cc.Layer.extend({
         explainbox.addChild(explain, 0, 'explain');
         
         // 手指提示
-        var playexplain = self.playexplain = new cc.Sprite(res.playexplain);
+        var playexplain = self.playexplain = new cc.Sprite(G_res.playexplain);
         playexplain.attr({
         	anchorX: 0,
         	anchorY: 0,
@@ -74,7 +74,7 @@ var StartMenu = cc.Layer.extend({
         explainbox.addChild(playexplain, 0, 'playexplain');
         
         // go 图片
-        var go = self.go = new cc.Sprite(res.go);
+        var go = self.go = new cc.Sprite(G_res.go);
         go.attr({
         	anchorX: 0,
         	anchorY: 0,

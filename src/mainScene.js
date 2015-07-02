@@ -16,7 +16,7 @@ var MainScene = cc.Layer.extend({
         self.addChild(container);
         
         // 背景图
-        var bg = self.bg = new cc.Sprite(res.bg);
+        var bg = self.bg = new cc.Sprite(G_res.bg);
         bg.attr({
         	anchorX: 0,
         	anchorY: 0,
@@ -26,7 +26,7 @@ var MainScene = cc.Layer.extend({
         container.addChild(bg, 0, 'bg');
         
         // ready
-        var ready = self.ready = new cc.Sprite(res.ready, cc.rect(0, 0, 630, 140));
+        var ready = self.ready = new cc.Sprite(G_res.ready, cc.rect(0, 0, 630, 140));
         ready.attr({
         	anchorX: 0,
         	anchorY: 0,
@@ -78,7 +78,9 @@ var MainScene = cc.Layer.extend({
 		var milkContainer = self.milkContainer = new cc.Layer();
         milkContainer.setPosition(cc.visibleRect.bottomLeft);
         self.addChild(milkContainer);
-		var checkInterval = self.checkInterval = setInterval(self.checkIsOver.bind(this), 500);
+//		var checkInterval = self.checkInterval = setInterval(self.checkIsOver.bind(this), 500);
+		
+		cc.audioEngine.playMusic(G_res.bgmusic, true);
 		
 		// 渲染奶粉
 		self.moveMilk(GC.rules, 0);
@@ -167,7 +169,7 @@ var MainScene = cc.Layer.extend({
     		cc.rect(717, 149, 320, 378)
     	]
     	for (var i = 3, j = 0; i >= 1; i--, j++) {
-    		var num = new cc.Sprite(res.ready, rects[j]);
+    		var num = new cc.Sprite(G_res.ready, rects[j]);
     		num.attr({
 	        	anchorX: 0,
 	        	anchorY: 0,
@@ -185,7 +187,7 @@ var MainScene = cc.Layer.extend({
     	
     	var self = this;
     	// 分数框
-        var scoreBox = self.scoreBox = new cc.Sprite(res.time, cc.rect(0, 0, 166, 53));
+        var scoreBox = self.scoreBox = new cc.Sprite(G_res.time, cc.rect(0, 0, 166, 53));
         scoreBox.attr({
         	anchorX: 0,
         	anchorY: 0,
@@ -198,7 +200,7 @@ var MainScene = cc.Layer.extend({
         self.setScore(0);
         
        	// 时间框
-       	var timeBox = self.timeBox = new cc.Sprite(res.time, cc.rect(0, 84, 316, 53));
+       	var timeBox = self.timeBox = new cc.Sprite(G_res.time, cc.rect(0, 84, 316, 53));
         timeBox.attr({
         	anchorX: 0,
         	anchorY: 0,
@@ -208,7 +210,7 @@ var MainScene = cc.Layer.extend({
         container.addChild(timeBox, 0, 'timeBox');
         
         // 时间条背景
-        var timebg = self.timebg = new cc.Sprite(res.time, cc.rect(0, 154, 298, 41));
+        var timebg = self.timebg = new cc.Sprite(G_res.time, cc.rect(0, 154, 298, 41));
         timebg.attr({
         	anchorX: 0,
         	anchorY: 0,
@@ -218,7 +220,7 @@ var MainScene = cc.Layer.extend({
         container.addChild(timebg, 0, 'timebg');
         
         // 时间条
-        var time = self.time = new cc.Sprite(res.time, cc.rect(0, 215, 298, 41));
+        var time = self.time = new cc.Sprite(G_res.time, cc.rect(0, 215, 298, 41));
         time.attr({
         	anchorX: 0,
         	anchorY: 0,
@@ -256,7 +258,7 @@ var MainScene = cc.Layer.extend({
     	var buttons = {};
     	for (var i = 0; i < 4; i++) {
     		
-    		var button_normal = new cc.Sprite(res.button, rects[i]);
+    		var button_normal = new cc.Sprite(G_res.button, rects[i]);
 	        button_normal.attr({
 	        	anchorX: 0,
 	        	anchorY: 0,
@@ -267,7 +269,7 @@ var MainScene = cc.Layer.extend({
 			buttons['button' + i] = button_normal;
 			cc.eventManager.addListener(listener.clone(), button_normal);
 	        
-	        var button_activate = new cc.Sprite(res.button, rects_activate[i]);
+	        var button_activate = new cc.Sprite(G_res.button, rects_activate[i]);
 	        button_activate.attr({
 	        	anchorX: 0,
 	        	anchorY: 0,
@@ -278,7 +280,7 @@ var MainScene = cc.Layer.extend({
 	        container.addChild(button_activate, 6, 'button' + i + 'activate');
 	        
 	        
-	        var effect = new cc.Sprite(res.effect, effect_rects[i]);
+	        var effect = new cc.Sprite(G_res.effect, effect_rects[i]);
 	        effect.attr({
 	        	anchorX: 0,
 	        	anchorY: 0,
@@ -369,7 +371,7 @@ var MainScene = cc.Layer.extend({
         		'tenThousand': 120
         	}
 
-        	var num = self[key] = new cc.Sprite(res.number, cc.rect(294, 0, 28, 35));
+        	var num = self[key] = new cc.Sprite(G_res.number, cc.rect(294, 0, 28, 35));
         	var x = self.scoreBox.x + self.scoreBox.width - num.width - 11, y = self.scoreBox.y + 8;
 	        num.attr({
 	        	anchorX: 0,
@@ -432,6 +434,8 @@ var MainScene = cc.Layer.extend({
     	activate.setVisible(true);
     	
     	node.setVisible(false);
+    	
+    	cc.audioEngine.playEffect(G_res.touch);
    },
     btnTouchEnd: function(node){
    		var self = this,
@@ -469,7 +473,7 @@ var MainScene = cc.Layer.extend({
 	    		
 	    	} else if(allMilk.length > 0){
 	    		// 游戏结束
-	    		self.gameOver();
+//	    		self.gameOver();
 	    	}
     	}
    },
@@ -481,7 +485,7 @@ var MainScene = cc.Layer.extend({
     		milkContainer = self.milkContainer;
     		
    		var random = Math.floor(Math.random() * milk_rects.length);
-   		var milk = new cc.Sprite(res.milk, milk_rects[random]);
+   		var milk = new cc.Sprite(G_res.milk, milk_rects[random]);
         milk.attr({
         	anchorX: 0,
         	anchorY: 0,
@@ -541,7 +545,7 @@ var MainScene = cc.Layer.extend({
    		
    		function renderTip(){
    			
-   			var tip = self.tip = new cc.Sprite(res.tip, rects['3000']);
+   			var tip = self.tip = new cc.Sprite(G_res.tip, rects['3000']);
    			
 	        tip.attr({
 	        	anchorX: 0,
@@ -564,7 +568,7 @@ var MainScene = cc.Layer.extend({
         self.addChild(resultContainer, 10);
    		
    		// 背景框
-   		var resultbg = new cc.Sprite(res.resultbg);
+   		var resultbg = new cc.Sprite(G_res.resultbg);
         resultbg.attr({
         	anchorX: 0,
         	anchorY: 0
@@ -587,7 +591,7 @@ var MainScene = cc.Layer.extend({
         	// 超级神“抢”手
         	txt_rect = cc.rect(2035, 0, 662, 301);
         }
-        var result_text = new cc.Sprite(res.result_text, txt_rect);
+        var result_text = new cc.Sprite(G_res.result_text, txt_rect);
         result_text.attr({
         	anchorX: 0,
         	anchorY: 0,
@@ -597,7 +601,7 @@ var MainScene = cc.Layer.extend({
         resultContainer.addChild(result_text, 0, 'result_text');
         
         // 分数背景
-        var result_scorebg = new cc.Sprite(res.result_scorebg);
+        var result_scorebg = new cc.Sprite(G_res.result_scorebg);
         result_scorebg.attr({
         	anchorX: 0,
         	anchorY: 0,
@@ -636,7 +640,7 @@ var MainScene = cc.Layer.extend({
     	score += '';
     	for (var i = 0, len = score.length, str; i < len; i++) {
     		str = +score[i];
-    		var num = new cc.Sprite(res.number, numberRects[str]);
+    		var num = new cc.Sprite(G_res.number, numberRects[str]);
 	        num.attr({
 	        	anchorX: 0,
 	        	anchorY: 0,
@@ -647,7 +651,7 @@ var MainScene = cc.Layer.extend({
     	}
         
         // 微信图标
-        var wechaticon = new cc.Sprite(res.wechaticon, cc.rect(127, 0, 90, 99));
+        var wechaticon = new cc.Sprite(G_res.wechaticon, cc.rect(127, 0, 90, 99));
         wechaticon.attr({
         	x: resultbg.width / 2 + wechaticon.width / 2 + 20,
         	y: result_text.y - 50
@@ -660,7 +664,7 @@ var MainScene = cc.Layer.extend({
         cc.eventManager.addListener(listener.clone(), wechaticon);
 //      
         // 再来一次
-        var restart = new cc.Sprite(res.wechaticon, cc.rect(0, 0, 90, 99));
+        var restart = new cc.Sprite(G_res.wechaticon, cc.rect(0, 0, 90, 99));
         restart.attr({
         	x: wechaticon.x - restart.width - 30,
         	y: wechaticon.y
@@ -669,7 +673,7 @@ var MainScene = cc.Layer.extend({
         cc.eventManager.addListener(listener.clone(), restart);
         
         // 分享
-        var share = self.share = new cc.Sprite(res.share);
+        var share = self.share = new cc.Sprite(G_res.share);
         share.attr({
         	anchorX: 0,
         	anchorY: 0
