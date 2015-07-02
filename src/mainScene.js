@@ -696,16 +696,19 @@ var MainScene = cc.Layer.extend({
 	                if (cc.rectContainsPoint(rect, locationInNode)) {
 	                	var name = target.getName();
 	                	if(name == 'wechaticon'){
+	                		Utils.touchEffect();
 	                		self.share.setVisible(true);
 	                		resultContainer.setVisible(false);
 //              			self.removeChild(resultContainer);
 	                	} else if(name == 'restart'){
+	                		Utils.touchEffect();
 	                		cc.director.runScene(new MainScene());
 	                	} else if(name == 'share'){
+	                		Utils.touchEffect();
 	                		self.share.setVisible(false);
 	                		resultContainer.setVisible(true);
 	                	}
-	                	Utils.touchEffect();
+	                	
 	                	return true;
 	                }
 		            return false;
