@@ -101,6 +101,9 @@ var MainScene = cc.Layer.extend({
     	
     	// 弹出结果显示
     	Utils.delayExec(self.popupResult.bind(self), 1000);
+    	
+    	// 设置分享
+    	setShareInfo(self.currentScore);
     },
     count: 0,
     moveMilk: function(rules, index){

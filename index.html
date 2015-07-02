@@ -62,8 +62,8 @@
 </div>
 
 <canvas id="gameCanvas"></canvas>
-<script src="lib/cocos2d-js-v3.6-lite.js" type="text/javascript" charset="utf-8"></script>
-<!--<script src="lib/cocos2d-js-v3.2-min.js" type="text/javascript" charset="utf-8"></script>-->
+<!--<script src="lib/cocos2d-js-v3.6-lite.js" type="text/javascript" charset="utf-8"></script>-->
+<script src="lib/cocos2d-js-v3.6-lite.min.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 	
 	initView();
@@ -124,5 +124,60 @@
 	
 	
 </script>
+
+<!-- 百度统计相关 -->
+<script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?9da61d6c8cdd9faa829208d8895c0f20";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<!-- 微信分享相关 -->
+<script type="text/javascript" charset="utf-8" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript">
+	wx.config({
+        debug: false,
+        appId: '<?php echo $signPackage["appId"];?>',
+        timestamp: '<?php echo $signPackage["timestamp"];?>',
+        nonceStr: '<?php echo $signPackage["nonceStr"];?>',
+        signature: '<?php echo $signPackage["signature"];?>',
+        jsApiList: [
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage',
+            'onMenuShareQQ',
+            'onMenuShareWeibo',
+            'chooseImage'
+        ]
+    });
+    
+    function setShareInfo(num){
+    	
+    	var nickname = '入门新手';
+    	if(num >= GC.level.l1){
+    		nickname = '大力水手';
+    	} else if(num >= GC.level.l2){
+    		nickname = '武林高手';
+    	} else if(num >= GC.level.l3){
+    		nickname = '超级神抢手';
+    	}
+    	
+    	var shareData = {
+            title: '美赞臣', //分享标题
+            desc: '我在美赞臣奶粉抢夺战中收获了' + (num || 0) + '罐奶粉，获得了' + nickname + '的称号！你也快来“抢”一罐吧！',
+            link: location.href,
+            imgUrl: 'res/img/shareimg.png'
+        };
+        
+        wx.onMenuShareAppMessage(shareData);
+        wx.onMenuShareTimeline(shareData);
+        wx.onMenuShareQQ(shareData);
+        wx.onMenuShareWeibo(shareData);
+    }
+</script>
+
 </body>
 </html>
