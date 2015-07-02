@@ -79,9 +79,7 @@ var MainScene = cc.Layer.extend({
         milkContainer.setPosition(cc.visibleRect.bottomLeft);
         self.addChild(milkContainer);
 //		var checkInterval = self.checkInterval = setInterval(self.checkIsOver.bind(this), 500);
-		
-		cc.audioEngine.playMusic(G_res.bgmusic, true);
-		
+		Utils.bgEffect();
 		// 渲染奶粉
 		self.moveMilk(GC.rules, 0);
     },
@@ -97,6 +95,8 @@ var MainScene = cc.Layer.extend({
     	cc.eventManager.removeListeners(self.buttons['button1']);
     	cc.eventManager.removeListeners(self.buttons['button2']);
     	cc.eventManager.removeListeners(self.buttons['button3']);
+    	
+    	Utils.stopBgEffect();
     	
     	// 弹出结果显示
     	Utils.delayExec(self.popupResult.bind(self), 1000);
@@ -435,7 +435,7 @@ var MainScene = cc.Layer.extend({
     	
     	node.setVisible(false);
     	
-    	cc.audioEngine.playEffect(G_res.touch);
+    	Utils.touchEffect();
    },
     btnTouchEnd: function(node){
    		var self = this,
@@ -705,6 +705,7 @@ var MainScene = cc.Layer.extend({
 	                		self.share.setVisible(false);
 	                		resultContainer.setVisible(true);
 	                	}
+	                	Utils.touchEffect();
 	                	return true;
 	                }
 		            return false;

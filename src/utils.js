@@ -13,5 +13,17 @@ var Utils = {
         setTimeout(function(){
         	node.setVisible(false);
         }, time || 0.5);
+    },
+    touchEffect: function(){
+    	cc.audioEngine.playEffect(G_res.touch);
+    },
+    loadendEffect: function(){
+    	cc.audioEngine.playEffect(G_res.loadend);
+    },
+    bgEffect: function(){
+    	cc.audioEngine.playMusic(G_res.bgmusic, true);
+    },
+    stopBgEffect: function(){
+    	cc.audioEngine.stopMusic();
     }
 }
