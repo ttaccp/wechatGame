@@ -78,7 +78,7 @@ var MainScene = cc.Layer.extend({
 		var milkContainer = self.milkContainer = new cc.Layer();
         milkContainer.setPosition(cc.visibleRect.bottomLeft);
         self.addChild(milkContainer);
-//		var checkInterval = self.checkInterval = setInterval(self.checkIsOver.bind(this), 500);
+		var checkInterval = self.checkInterval = setInterval(self.checkIsOver.bind(this), 500);
 		
 		Utils.bgEffect();
 
