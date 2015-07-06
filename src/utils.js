@@ -18,7 +18,7 @@ var Utils = {
     	cc.audioEngine.playEffect(G_res.touch);
     },
     loadendEffect: function(){
-    	cc.audioEngine.playEffect(G_res.loadend, true);
+    	cc.audioEngine.playEffect(G_res.loadend);
     },
     bgEffect: function(){
     	cc.audioEngine.playMusic(G_res.bgmusic, true);
