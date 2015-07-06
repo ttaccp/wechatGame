@@ -51,6 +51,8 @@ cc.Loader = cc.Scene.extend({
         var self = this;
         self.unschedule(self._startLoading);
         var res = self.resources;
+        cc.audioEngine.setMusicVolume(1);
+    	var loadid = cc.audioEngine.playEffect(G_res.loadend, true);
         cc.loader.load(res,
             function (result, count, loadedCount) {
             	
@@ -60,8 +62,7 @@ cc.Loader = cc.Scene.extend({
                 self.loading_img.setTextureRect(cc.rect(0, 0, 298 * percent / 100, 41));
             }, function () {
                 if (self.cb) {
-                	cc.audioEngine.setMusicVolume(1);
-                	Utils.loadendEffect();
+                	cc.audioEngine.stopEffect(loadid);
                 	setTimeout(self.cb.bind(self), 100);
                 }   
             });
