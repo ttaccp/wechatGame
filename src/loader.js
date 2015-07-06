@@ -52,7 +52,7 @@ cc.Loader = cc.Scene.extend({
         self.unschedule(self._startLoading);
         var res = self.resources;
         cc.audioEngine.setMusicVolume(1);
-    	var loadid = cc.audioEngine.playEffect(G_res.loadend, true);
+    	var loadid = cc.audioEngine.playEffect(G_res.loadend);
         cc.loader.load(res,
             function (result, count, loadedCount) {
             	

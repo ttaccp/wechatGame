@@ -55,7 +55,7 @@ var StartMenu = cc.Layer.extend({
         	anchorX: 0,
         	anchorY: 0,
         	x: size.width / 2 - explain.width / 2,
-        	y: size.height / 2 - explain.height / 2 + 30,
+        	y: size.height / 2 - explain.height / 2 + 30
         });
         
         self.addChild(explainbox);
@@ -86,7 +86,7 @@ var StartMenu = cc.Layer.extend({
         explainbox.addChild(go, 0, 'go');
         
         // 添加事件
-        cc.eventManager.addListener({
+        var _listener = cc.EventListener.create({
             event: cc.EventListener.TOUCH_ONE_BY_ONE,//单击
             swallowTouches: true,
             onTouchBegan: function(touch, event) {
@@ -95,18 +95,27 @@ var StartMenu = cc.Layer.extend({
                 var s = target.getContentSize();
                 var rect = cc.rect(0, 0, s.width, s.height);
                 if (cc.rectContainsPoint(rect, locationInNode)) {
-                	cc.director.runScene(new MainScene());
+                    if(go.isVisible()){
+                        cc.director.runScene(new MainScene());
+                    } else {
+                        self.showGo();
+                        cc.eventManager.addListener(_listener.clone(), go);
+                    }
                 }
                 return true;
             }
-        }, go);
-        
+        });
+
+        Utils.delayExec(function () {
+            cc.eventManager.addListener(_listener.clone(), explainbox);
+        }, GC.time_showExplain + GC.time_showExplain + 2000);
+
         // 显示说明
         Utils.delayExec(self.showExplain.bind(self), GC.time_showExplain);
         // 手指提示
         Utils.delayExec(self.showPlayexplain.bind(self), GC.time_showExplain + GC.time_showExplain);
         // 显示GO
-        Utils.delayExec(self.showGo.bind(self), GC.time_showExplain + GC.time_showExplain + GC.time_showGo);
+        //Utils.delayExec(self.showGo.bind(self), GC.time_showExplain + GC.time_showExplain + GC.time_showGo);
         
         return true;
     },
