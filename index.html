@@ -158,11 +158,11 @@
     function setShareInfo(num){	// num表示得分
     	
     	var nickname = '入门新手';
-    	if(num >= GC.level.l1){
+    	if(num > GC.level.l1){
     		nickname = '大力水手';
-    	} else if(num >= GC.level.l2){
+    	} else if(num > GC.level.l2){
     		nickname = '武林高手';
-    	} else if(num >= GC.level.l3){
+    	} else if(num > GC.level.l3){
     		nickname = '超级神抢手';
     	}
     	

@@ -5,7 +5,6 @@ var MainScene = cc.Layer.extend({
         this.init();
     },
     init:function () {
-        
         var self = this,
         	visibleRect = cc.visibleRect,
         	center = visibleRect.center,
@@ -66,7 +65,7 @@ var MainScene = cc.Layer.extend({
     	cc.log(allMilk.length)
     	for (var i = 0, len = allMilk.length, item; i <len; i++) {
     		item = allMilk[i];
-			if(item.y <= 0){
+			if(item.y <= -item.height){
 				self.gameOver();
 				break;
 			}
@@ -78,7 +77,7 @@ var MainScene = cc.Layer.extend({
 		var milkContainer = self.milkContainer = new cc.Layer();
         milkContainer.setPosition(cc.visibleRect.bottomLeft);
         self.addChild(milkContainer);
-		var checkInterval = self.checkInterval = setInterval(self.checkIsOver.bind(this), 500);
+		var checkInterval = self.checkInterval = setInterval(self.checkIsOver.bind(this), 100);
 		
 		Utils.bgEffect();
 
@@ -525,14 +524,14 @@ var MainScene = cc.Layer.extend({
    		var bg = self.bg;
    		
    		var rects = {};
-   		rects[GC.level.l1] = cc.rect(504, 0, 435, 85);	// NOT BAD
-   		rects[GC.level.l2] = cc.rect(1007, 0, 250, 85);	// COOL
-   		rects[GC.level.l3] = cc.rect(1372, 0, 584, 85);	// WONDERFUL
-   		rects[GC.level.l4] = cc.rect(0, 0, 448, 85);	// PERFECT
+   		rects['2500'] = cc.rect(504, 0, 435, 85);	// NOT BAD
+   		rects['8800'] = cc.rect(1007, 0, 250, 85);	// COOL
+   		rects['10800'] = cc.rect(1372, 0, 584, 85);	// WONDERFUL
+   		rects['11400'] = cc.rect(0, 0, 448, 85);	// PERFECT
    		
    		var rect = rects[score];
    		if(rect){
-   			
+
    			if(!self.isInitTip){
    				self.isInitTip = true;
    				renderTip();
@@ -582,13 +581,13 @@ var MainScene = cc.Layer.extend({
         
         // 提示文字
         var txt_rect;
-        if(score < level.l1){
+        if(score <= level.l1){
         	// 入门新手
         	txt_rect = cc.rect(0, 0, 664, 301);
-        } else if(score < level.l2){
+        } else if(score <= level.l2){
         	// 大力水手
         	txt_rect = cc.rect(676, 0, 662, 301);
-        } else if(score < level.l3){
+        } else if(score <= level.l3){
         	// 武林高手
         	txt_rect = cc.rect(1349, 0, 663, 301);
         } else {
